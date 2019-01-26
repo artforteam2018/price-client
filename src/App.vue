@@ -1,10 +1,10 @@
 <template>
 
-    <div class="vh-100">
+    <div class="justify-center vh-100">
         <Auth v-if="!isAuthenticated"></Auth>
         <v-layout fill-height v-if="isAuthenticated">
-            <v-flex md10 offset-md1 xs12>
-            <LandingPage></LandingPage>
+            <v-flex>
+                <LandingPage></LandingPage>
             </v-flex>
         </v-layout>
     </div>

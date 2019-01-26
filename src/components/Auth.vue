@@ -1,5 +1,31 @@
 <template>
     <div>
+        <v-dialog data-app="false" width="50vw" persistent large lazy scrollable v-model="dialog">
+            <v-card>
+                <div class="mx-4 my-4">
+                    <div class="font-weight-regular title text-md-center text-xs-center">Требуется пароль
+                        администратора
+                    </div>
+                    <v-text-field @keypress.enter="login"
+                                  :append-icon="show3 ? 'visibility_off' : 'visibility'"
+                                  :type="show3 ? 'text' : 'password'"
+                                  label="Пароль"
+                                  v-model="admin_password"
+                                  :error-messages="passwordErrors"
+                                  @click:append="show3 = !show3"
+                    ></v-text-field>
+                    <v-select
+                        v-model="region"
+                        :items="['МСК', 'УрФО', 'KZ']"
+                        label="Регион пользователя"
+                    ></v-select>
+                    <v-layout :class="mobileShow ? 'justify-space-between' : 'justify-end'">
+                        <v-btn type="button" class="ml-0" flat @click="dialog = false">Отменить</v-btn>
+                        <v-btn type="button" class="mr-0" flat @click="register">Подтвердить</v-btn>
+                    </v-layout>
+                </div>
+            </v-card>
+        </v-dialog>
         <v-form class="login vh-100" ref="form">
             <v-layout justify-center align-center fill-height>
                 <v-flex xs8 md4 class="mb-5">
@@ -24,8 +50,8 @@
                                   @click:append="show3 = !show3"
                     ></v-text-field>
                     <v-layout  :class="mobileShow ? 'justify-space-between' : 'justify-end'">
-                        <v-btn type="button" class="teal lighten-3 ml-0" @click="login">Вход</v-btn>
-                        <v-btn type="button" class="teal lighten-3 mr-0" @click="register">Регистрация</v-btn>
+                        <v-btn type="button" class="ml-0" flat @click="login">Вход</v-btn>
+                        <v-btn type="button" class="mr-0" flat @click="admin_req">Регистрация</v-btn>
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -65,6 +91,7 @@
         name: "Auth",
         data() {
             return {
+                dialog: false,
                 show3: false,
                 rules: {
                     required: value => !!value || 'Не заполнено',
@@ -72,6 +99,8 @@
                 },
                 username: '',
                 password: '',
+                admin_password: '',
+                region: '',
                 sha256: require('sha256')
             }
         },
@@ -90,7 +119,9 @@
                 if (!this.$v.$error) {
                     let username = this.username;
                     let password = this.sha256(this.password);
-                    this.$store.dispatch('REGISTER_REQUEST', {username, password}).then(result => {
+                    let admin_password = this.admin_password;
+                    let region = this.region;
+                    this.$store.dispatch('REGISTER_REQUEST', {username, password, admin_password, region}).then(result => {
                         if (result.data.success) {
                             this.login()
                         } else {
@@ -98,6 +129,9 @@
                         }
                     })
                 }
+            },
+            admin_req(){
+                this.dialog = true;
             }
         }
     }

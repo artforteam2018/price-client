@@ -26,17 +26,14 @@
 
 .overflow{
     overflow: auto !important;
-
 }
-
+.v-menu__activator{
+    justify-content: center;
+}
 .pre{
     white-space:pre-wrap;
 }
 
-
-html{
-    overflow: hidden !important;
-}
 
 .text-teal{
     color: #01806A;
@@ -66,6 +63,10 @@ html{
     font-family: 'IbmPlexSansRegular', sans-serif;
 }
 
+.regular {
+    font-family: 'IbmPlexSansThin', sans-serif !important;
+}
+
 .thin {
     font-family: 'IbmPlexSansThin', sans-serif !important;
 }
@@ -74,9 +75,6 @@ html{
     overflow-x: hidden !important;
 }
 
-.v-table__overflow{
-    overflow-x: hidden !important;
-}
 
 .v-menu__content{
     border-radius: 5px !important;
@@ -84,4 +82,19 @@ html{
 
 .text-right{
     text-align-last: right !important;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(50,50,50,1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(70,70,70,1);
 }

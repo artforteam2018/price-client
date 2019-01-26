@@ -8,15 +8,17 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import 'material-design-icons-iconfont/dist/material-design-icons.css' // Ensure you are using css-loader
+import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
+
 import store from './store'
 
-const ip = "192.168.0.123";
+const ip = "192.168.0.139";
 
 Vue.use(Vuetify, {
     iconfont: 'mdi'
-})
-Vue.use(Vuex)
-Vue.use(VueAxios, axios)
+});
+Vue.use(Vuex);
+Vue.use(VueAxios, axios);
 
 Vue.use(new VueSocketIO({
     debug: false,
@@ -26,9 +28,9 @@ Vue.use(new VueSocketIO({
         actionPrefix: 'SOCKET_',
         mutationPrefix: 'SOCKET_'
     }
-}))
+}));
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
@@ -36,4 +38,4 @@ new Vue({
     store,
     template: '<App/>',
     components: {App},
-})
+});

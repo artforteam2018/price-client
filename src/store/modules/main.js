@@ -3,7 +3,7 @@ const state = {
     username: localStorage.getItem('username') || '',
     username2: '',
     status: '',
-    ip: "192.168.0.123",
+    ip: "192.168.0.139",
     axios: require('axios')
 };
 
@@ -119,11 +119,20 @@ const actions = {
                 })
         })
     },
-    SEARCH_USER: ({}, data) =>{
-        return new Promise((resolve, reject) => {
-            // commit('REGISTER_REQUEST')
+    GET_RECEIVERS: ({}) => {
+        return new Promise(resolve => {
             this.default.state.axios({
-                url: 'http://' + this.default.state.ip + ':3535/searchUser', data: data, method: 'POST'
+                url: 'http://' + this.default.state.ip + ':3535/getReceivers', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+        })
+    },
+    CHANGE_RECEIVERS: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/changeReceivers', data, method: 'POST'
             })
                 .then(resp => {
                     resolve(resp)
@@ -132,7 +141,148 @@ const actions = {
                     reject(err)
                 })
         })
-    }
+    },
+    GET_TEMPLATES: ({}) => {
+        return new Promise(resolve => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getTemplates', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+        })
+    },
+    CHANGE_TEMPLATES: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/changeTemplates', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    GET_HEADERS: ({}) => {
+        return new Promise(resolve => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getHeaders', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+        })
+    },
+    CHANGE_HEADERS: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/changeHeaders', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    GET_TEMPLATE: ({}) => {
+        return new Promise(resolve => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getTemplate', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+        })
+    },
+    CHANGE_TEMPLATE: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/changeTemplate', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    GET_SENDERS: ({}) => {
+        return new Promise(resolve => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getSenders', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+        })
+    },
+    CHANGE_SENDERS: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/changeSenders', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    CHANGE_TABLE: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/changeTable', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    GET_SEND_LOG: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getSendLog', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    GET_SETTINGS: ({}) => {
+        return new Promise(resolve => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getSettings', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+        })
+    },
+    CHANGE_SETTINGS: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/changeSettings', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
 
 };
 
@@ -143,7 +293,72 @@ const getters = {
     isAuthenticated: state => !!state.token,
     authStatus: state => state.status,
     getUsername: state => state.username,
-    getToken: state => state.token
+    getToken: state => state.token,
+    getConvertRulesComp: state => id => {
+        return new Promise((resolve, reject) => {
+            state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getConvertRulesComp', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp.data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getTemplatesComp: state => id => {
+        return new Promise((resolve, reject) => {
+            state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getTemplatesComp', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp.data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getReceiversComp: state => id => {
+        return new Promise((resolve, reject) => {
+            state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getReceiversComp', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp.data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getSendersComp: state => id => {
+        return new Promise((resolve, reject) => {
+            state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getSendersComp', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp.data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getHeadersComp: state => id => {
+        return new Promise((resolve, reject) => {
+            state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getHeadersComp', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp.data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    }
 };
 
 export default {
