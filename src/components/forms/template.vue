@@ -166,6 +166,7 @@
 <script>
     export default {
         name: "headers",
+        props:['defaultSelect'],
         data() {
             return {
                 dialog: false,
@@ -241,6 +242,7 @@
                         this.selects = [];
                         this.selects = result.data;
                         this.maxId = result.data[result.data.length - 1].id
+                        this.selected.push(this.selects.filter(s => s.id === this.defaultSelect)[0])
                     })
             },
             updateTable() {

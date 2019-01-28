@@ -68,6 +68,7 @@
 <script>
     export default {
         name: "receivers",
+        props: ['defaultSelect'],
         data() {
             return {
                 dialog: false,
@@ -112,6 +113,10 @@
                         this.selects = [];
                         this.selects = result.data;
                         this.maxId = result.data[result.data.length-1].id
+
+                        this.defaultSelect.forEach(select => {
+                            this.selected.push(this.selects.filter(s => s.id === select.id)[0])
+                        });
                     })
             },
             updateTable(){

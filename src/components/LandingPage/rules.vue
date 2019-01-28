@@ -38,7 +38,7 @@
                         <v-layout row justify-space-between align-center>
                             {{props.item.sender_name}}
                             <v-spacer></v-spacer>
-                            <senders @selectSenders="selectSenders($event, props.item)"></senders>
+                            <senders :defaultSelect="props.item.sender" @selectSenders="selectSenders($event, props.item)"></senders>
                         </v-layout>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
@@ -69,14 +69,14 @@
                         <v-layout row justify-space-between align-center>
                             {{getTemplateStr(props.item.templatesComp)}}
                             <v-spacer></v-spacer>
-                            <convert_rules @selectConvertRules="selectConvertRules($event, props.item)"></convert_rules>
+                            <convert_rules :defaultSelect="props.item.templatesComp" @selectConvertRules="selectConvertRules($event, props.item)"></convert_rules>
                         </v-layout>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-layout row justify-space-between align-center>
                             {{getReceiverStr(props.item.receiversComp)}}
                             <v-spacer></v-spacer>
-                            <receivers @selectReceivers="selectReceivers($event, props.item)"></receivers>
+                            <receivers :defaultSelect="props.item.receiversComp" @selectReceivers="selectReceivers($event, props.item)"></receivers>
                         </v-layout>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">

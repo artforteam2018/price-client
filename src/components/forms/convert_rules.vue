@@ -35,7 +35,7 @@
                         <td :class="props.item.removed ? 'grey' : ''">
                             <v-layout row justify-space-between align-center>
                                 {{props.item.template_name}}
-                                <template_t @selectTemplate="selectTemplate($event, props.item)"></template_t>
+                                <template_t :defaultSelect="props.item.template" @selectTemplate="selectTemplate($event, props.item)"></template_t>
                             </v-layout>
                         </td>
                         <td :class="props.item.removed ? 'grey' : ''">
@@ -77,7 +77,7 @@
                         <td :class="props.item.removed ? 'grey' : ''">
                             <v-layout row justify-space-between align-center>
                                 {{props.item.headers_name}}
-                                <headers @selectHeaders="selectHeaders($event, props.item)"></headers>
+                                <headers :defaultSelect="props.item.headers" @selectHeaders="selectHeaders($event, props.item)"></headers>
                             </v-layout>
                         </td>
                         <td :class="props.item.removed ? 'grey' : ''" class="text-md-center px-2">
@@ -187,8 +187,12 @@
                                 resolve();
                             })
                         }));
-
+                        console.log(this.selects)
+                        console.log(this.defaultSelect)
                         console.log(this.selected);
+                        this.defaultSelect.forEach(select => {
+                            this.selected.push(this.selects.filter(s => s.id === select.id)[0])
+                        });
 
                         this.maxId = result.data[result.data.length - 1].id
                     })
