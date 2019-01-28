@@ -110,6 +110,7 @@
 
     export default {
         name: "convert_rules",
+        props: ['defaultSelect'],
         data() {
             return {
                 dialog: false,
@@ -165,26 +166,29 @@
             refreshReceivers() {
                 this.$store.dispatch('GET_TEMPLATES')
                     .then(async result => {
-                        console.log(result)
                         result.data.sort((a, b) => a.id > b.id ? 1 : -1);
                         let templatesComp = await this.getTemplatesComp(1);
                         let headersComp = await this.getHeadersComp(1);
                         this.selects = [];
-                        result.data.forEach(res => {
-                            this.selects.push({
-                                name: res.name,
-                                sender: res.sender,
-                                filter: res.filter,
-                                title_filter: res.title_filter,
-                                id: res.id,
-                                template_name: templatesComp.filter(temp => temp.id === res.template)[0].pseudoname,
-                                template: res.template,
-                                headers: res.headers,
-                                removed: res.removed,
-                                headers_name: headersComp.filter(head => head.id === res.headers)[0].name
+                        await Promise.all(result.data.map(res => {
+                            return new Promise(resolve => {
+                                this.selects.push({
+                                    name: res.name,
+                                    sender: res.sender,
+                                    filter: res.filter,
+                                    title_filter: res.title_filter,
+                                    id: res.id,
+                                    template_name: templatesComp.filter(temp => temp.id === res.template)[0].pseudoname,
+                                    template: res.template,
+                                    headers: res.headers,
+                                    removed: res.removed,
+                                    headers_name: headersComp.filter(head => head.id === res.headers)[0].name
+                                });
+                                resolve();
                             })
+                        }));
 
-                        });
+                        console.log(this.selected);
 
                         this.maxId = result.data[result.data.length - 1].id
                     })

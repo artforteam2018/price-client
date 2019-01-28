@@ -200,7 +200,6 @@
             selectConvertRules(evt, item) {
                 let templatesCompColumn = [];
                 let idColumn = [];
-                console.log(evt.map(e => e.id))
                 evt.forEach(e => {
                     templatesCompColumn.push({id: e.id, name: e.name});
                     idColumn.push(e.id);

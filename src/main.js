@@ -12,7 +12,7 @@ import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loade
 
 import store from './store'
 
-const ip = "192.168.0.122";
+const ip = "localhost";
 
 Vue.use(Vuetify, {
     iconfont: 'mdi'
