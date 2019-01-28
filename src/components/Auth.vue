@@ -16,7 +16,7 @@
                     ></v-text-field>
                     <v-select
                         v-model="region"
-                        :items="['МСК', 'УрФО', 'KZ']"
+                        :items="['MSK', 'UrFO', 'KZ']"
                         label="Регион пользователя"
                     ></v-select>
                     <v-layout :class="mobileShow ? 'justify-space-between' : 'justify-end'">
@@ -29,12 +29,8 @@
         <v-form class="login vh-100" ref="form">
             <v-layout justify-center align-center fill-height>
                 <v-flex xs8 md4 class="mb-5">
-                    <v-layout justify-center>
-                    <v-avatar :size="mobileShow ? '156px' : '212px'" class="mb-2" color="teal lighten-3">
-                        <img src="static/img/icons/android-chrome-512x512.png" alt="avatar">
-                    </v-avatar>
-                    </v-layout>
-                    <div class="display-2 logo text-md-center text-xs-center">PA PRICES</div>
+                    <div class="display-2 logo text-md-center text-xs-center">ФОРМИРОВАНИЕ ПРАЙСОВ</div>
+                    <div class="mb-5"></div>
                     <v-text-field @keypress.enter="login"
                                   label="Имя пользователя"
                                   counter="20"
@@ -119,7 +115,7 @@
                 if (!this.$v.$error) {
                     let username = this.username;
                     let password = this.sha256(this.password);
-                    let admin_password = this.admin_password;
+                    let admin_password = this.sha256(this.admin_password);
                     let region = this.region;
                     this.$store.dispatch('REGISTER_REQUEST', {username, password, admin_password, region}).then(result => {
                         if (result.data.success) {

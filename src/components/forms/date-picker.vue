@@ -66,8 +66,8 @@
         props: ["index", "intervals", "frequency", "intervalStr"],
         methods: {
             deleteItem(item) {
-                const index = this.intervals.indexOf(item);
-                this.intervals.splice(index, 1)
+                const index = this.intervalsLoc.indexOf(item);
+                this.intervalsLoc.splice(index, 1)
             },
             openTab() {
                 this.intervalsLoc = this.intervals.concat();
@@ -79,7 +79,7 @@
                 }
             },
             add(){
-                this.intervalsLoc.push(new Date('20180101 12:00:00'))
+                this.intervalsLoc.push('2018-01-01 12:00:00')
             },
             changeItem(evt, item){
                 let date = new Date('2018-01-01');

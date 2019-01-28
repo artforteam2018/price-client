@@ -12,7 +12,7 @@ import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loade
 
 import store from './store'
 
-const ip = "192.168.0.139";
+const ip = "192.168.0.122";
 
 Vue.use(Vuetify, {
     iconfont: 'mdi'
@@ -21,7 +21,6 @@ Vue.use(Vuex);
 Vue.use(VueAxios, axios);
 
 Vue.use(new VueSocketIO({
-    debug: false,
     connection: "ws://" + ip + ":3535",
     vuex: {
         store,

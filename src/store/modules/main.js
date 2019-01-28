@@ -1,9 +1,10 @@
 const state = {
     token: localStorage.getItem('user-token') || '',
     username: localStorage.getItem('username') || '',
+    region: localStorage.getItem('region') || '',
     username2: '',
     status: '',
-    ip: "192.168.0.139",
+    ip: "192.168.0.122",
     axios: require('axios')
 };
 
@@ -15,6 +16,7 @@ const mutations = {
         state.status = 'success';
         state.token = data.token;
         state.username = data.username;
+        state.region = data.region;
     },
     AUTH_ERROR: (state) => {
         state.status = 'error';
@@ -24,6 +26,7 @@ const mutations = {
         state.username = null;
         localStorage.removeItem('user-token');
         localStorage.removeItem('username');
+        localStorage.removeItem('region');
     },
     REGISTER_REQUEST: (state) => {
         state.status = 'loading';
@@ -46,15 +49,18 @@ const actions = {
                 .then(resp => {
                     const token = resp.data.token;
                     const username = resp.data.username;
+                    const region = resp.data.region;
                     localStorage.setItem('user-token', token); // store the token in localstorage
                     localStorage.setItem('username', username);
-                    commit('AUTH_SUCCESS', {token: token, username: username});
+                    localStorage.setItem('region', region);
+                    commit('AUTH_SUCCESS', {token: token, username: username, region: region});
                     resolve()
                 })
                 .catch(err => {
                     commit('AUTH_ERROR', err);
                     localStorage.removeItem('user-token');
                     localStorage.removeItem('username');
+                    localStorage.removeItem('region');
                     reject(err)
                 })
         })
@@ -76,6 +82,7 @@ const actions = {
             if (this.default.state.token && this.default.state.username) {
                 this.default.state.axios.defaults.headers.common['Token'] = this.default.state.token;
                 this.default.state.axios.defaults.headers.common['Username'] = this.default.state.username;
+                this.default.state.axios.defaults.headers.common['Region'] = this.default.state.region;
             }
             this.default.state.axios({url: 'http://' + this.default.state.ip + ':3535/', method: 'GET'})
                 .then(resp => {
@@ -99,24 +106,6 @@ const actions = {
         return new Promise((resolve) => {
             commit('SET_USERNAME2', username2);
             resolve()
-        })
-    },
-    GET_DIALOGS: () => {
-        return new Promise((resolve, reject) => {
-            if (this.default.state.token && this.default.state.username) {
-                this.default.state.axios.defaults.headers.common['Token'] = this.default.state.token;
-                this.default.state.axios.defaults.headers.common['Username'] = this.default.state.username;
-            }
-            // commit('REGISTER_REQUEST')
-            this.default.state.axios({
-                url: 'http://' + this.default.state.ip + ':3535/getDialogs', method: 'GET'
-            })
-                .then(resp => {
-                    resolve(resp)
-                })
-                .catch(err => {
-                    reject(err)
-                })
         })
     },
     GET_RECEIVERS: ({}) => {
@@ -293,7 +282,8 @@ const getters = {
     isAuthenticated: state => !!state.token,
     authStatus: state => state.status,
     getUsername: state => state.username,
-    getToken: state => state.token,
+    getRegion: state => state.region,
+    getToken: state  => state.token,
     getConvertRulesComp: state => id => {
         return new Promise((resolve, reject) => {
             state.axios({

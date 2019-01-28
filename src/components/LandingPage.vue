@@ -44,7 +44,8 @@
                     });
                     this.$socket.emit("loadTable", {
                         token: this.getToken,
-                        username: this.getUsername
+                        username: this.getUsername,
+                        region: this.getRegion
                     })
                 })
         },
@@ -74,7 +75,8 @@
             mapGetters([
                 'isAuthenticated',
                 'getUsername',
-                'getToken'
+                'getToken',
+                'getRegion'
             ])
     }
 </script>

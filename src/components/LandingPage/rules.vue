@@ -1,7 +1,7 @@
 <template>
 
     <div class="h-100">
-        <v-flex md10 offset-md1>
+        <v-flex class="mx-4">
             <v-flex md4  class="mb-4 mx-auto">
                 <v-img src="static/img/logo/logo_all_planeta.png"></v-img>
             </v-flex>
@@ -14,7 +14,7 @@
             </v-flex>
             <v-data-table item-key="id" ref="tt" data-app :headers="headers" :items="send_rules">
                 <template slot="items" slot-scope="props">
-                    <td>
+                    <td :class="props.item.removed ? 'grey' : ''">
                         <v-edit-dialog :return-value.sync="props.item.rule_name" large lazy>
                             <v-layout column>
                                 {{ props.item.rule_name }}
@@ -34,14 +34,14 @@
                             ></v-text-field>
                         </v-edit-dialog>
                     </td>
-                    <td class="text-md-center">
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-layout row justify-space-between align-center>
                             {{props.item.sender_name}}
                             <v-spacer></v-spacer>
                             <senders @selectSenders="selectSenders($event, props.item)"></senders>
                         </v-layout>
                     </td>
-                    <td class="text-md-center">
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-edit-dialog :return-value.sync="props.item.result_name" large lazy>
                             {{ props.item.result_name }}
                             <v-text-field
@@ -53,7 +53,7 @@
                             ></v-text-field>
                         </v-edit-dialog>
                     </td>
-                    <td class="text-md-center">
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-edit-dialog :return-value.sync="props.item.title" large lazy>
                             {{ props.item.title }}
                             <v-text-field
@@ -65,47 +65,51 @@
                             ></v-text-field>
                         </v-edit-dialog>
                     </td>
-                    <td class="text-md-center">
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-layout row justify-space-between align-center>
                             {{getTemplateStr(props.item.templatesComp)}}
                             <v-spacer></v-spacer>
                             <convert_rules @selectConvertRules="selectConvertRules($event, props.item)"></convert_rules>
                         </v-layout>
                     </td>
-                    <td class="text-md-center">
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-layout row justify-space-between align-center>
                             {{getReceiverStr(props.item.receiversComp)}}
                             <v-spacer></v-spacer>
                             <receivers @selectReceivers="selectReceivers($event, props.item)"></receivers>
                         </v-layout>
                     </td>
-                    <td class="text-md-center">
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-checkbox @change="changesMade = true" class="justify-center" hide-details
                                     v-model="props.item.subscribe_to_update"></v-checkbox>
                     </td>
-                    <td class="text-md-center">
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <datePicker @saveTime="saveTime($event, props.item)" :index="props.index"
                                     :intervals="props.item.intervals"
                                     :frequency="props.item.frequency"
                                     :intervalStr="getIntervalStr(props.item)"></datePicker>
                     </td>
-                    <td class="text-md-center">
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-checkbox @change="changesMade = true" class="justify-center" hide-details
                                     v-model="props.item.in_use"></v-checkbox>
                     </td>
-                    <td class="text-md-center">
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
+                        <v-select
+                            v-model="props.item.region"
+                            @change="changesMade = true"
+                            :items="['MSK', 'UrFO', 'KZ']"
+                        ></v-select>
+                    </td>
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-icon small @click="getHistory(props)">history</v-icon>
                         <v-icon small @click="deleteItem(props.item)">delete</v-icon>
-                    </td>
-                    <td>
-                        <!--{{props.item.statusBar}}-->
                     </td>
                 </template>
                 <template slot="expand" slot-scope="props">
                     <v-data-table hide-actions hide-headers slot="input" :items="props.item.expandLog">
                         <template slot="items" slot-scope="props">
                             <td :class="props.item.success ? 'green lighten-5' : 'red lighten-5'">{{new
-                                Date(props.item.date.substring(0, props.item.date.length - 1)).toLocaleString()}}
+                                Date(props.item.date).toLocaleString()}}
                             </td>
                         </template>
                     </v-data-table>
@@ -159,8 +163,8 @@
                     {text: 'Отслеживать', align: 'center', value: 'subscribeToUpdate'},
                     {text: 'Частота отправки', align: 'center', value: 'frequency'},
                     {text: 'Использовать', align: 'center', value: 'inUse'},
-                    {text: 'Удалить', align: 'center', value: true},
-                    {text: '', value: true}
+                    {text: 'Регион', align: 'center', value: 'region'},
+                    {text: 'Удалить', align: 'center', value: true}
                 ],
                 showSetPrices: false,
                 mailTransport: null,
@@ -249,7 +253,8 @@
                         this.alertDialog = true;
                         this.$socket.emit("loadTable", {
                             token: this.getToken,
-                            username: this.getUsername
+                            username: this.getUsername,
+                            region: this.getRegion
                         })
                     })
             },
@@ -262,7 +267,7 @@
 
             getHistory(props) {
                 props.expanded = !props.expanded;
-                this.$store.dispatch('GET_SEND_LOG', {rule: props.item.id, columns: 15})
+                this.$store.dispatch('GET_SEND_LOG', {rule: props.item.id, columns: 7})
                     .then(result => {
                         this.send_rules.filter(send => send.id === props.item.id)[0].expandLog = result.data;
                     })
@@ -299,6 +304,7 @@
                         frequency: tab.frequency === null ? {days: 0, hours: 0, minutes: 0} : tab.frequency,
                         sender_name: sendersComp.filter(send => send.id === tab.sender)[0].name,
                         title: tab.title,
+                        region: tab.region,
                         templates: tab.templates,
                         templatesComp: tab.templatesComp,
                         receivers: tab.receivers,
@@ -306,7 +312,7 @@
                         removed: tab.removed,
                         expandLog: [],
                         statusBar: []
-                    })
+                    });
                 });
             },
             async updateSendLog(answer) {
@@ -325,7 +331,8 @@
                 'getSendersComp',
                 'getReceiversComp',
                 'getUsername',
-                'getToken'
+                'getToken',
+                'getRegion'
             ])
     }
 
