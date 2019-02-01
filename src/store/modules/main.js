@@ -49,7 +49,7 @@ const actions = {
                 .then(resp => {
                     const token = resp.data.token;
                     const username = resp.data.username;
-                    const region = resp.data.region;
+                    const region = resp.data.region.join(',');
                     localStorage.setItem('user-token', token); // store the token in localstorage
                     localStorage.setItem('username', username);
                     localStorage.setItem('region', region);

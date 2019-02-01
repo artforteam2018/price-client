@@ -187,9 +187,6 @@
                                 resolve();
                             })
                         }));
-                        console.log(this.selects)
-                        console.log(this.defaultSelect)
-                        console.log(this.selected);
                         this.defaultSelect.forEach(select => {
                             this.selected.push(this.selects.filter(s => s.id === select.id)[0])
                         });
@@ -212,7 +209,6 @@
             },
             async selectTemplate(evt, item) {
                 let templatesComp = await this.getTemplatesComp(1);
-                console.log(templatesComp);
                 this.selects[this.selects.indexOf(item)].template = evt[0].id;
                 this.selects[this.selects.indexOf(item)].template_name = templatesComp.filter(temp => temp.id === evt[0].id)[0].pseudoname;
                 this.changesMade = true;

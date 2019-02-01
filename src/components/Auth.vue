@@ -14,7 +14,7 @@
                                   :error-messages="passwordErrors"
                                   @click:append="show3 = !show3"
                     ></v-text-field>
-                    <v-select
+                    <v-select multiple chips
                         v-model="region"
                         :items="['MSK', 'UrFO', 'KZ']"
                         label="Регион пользователя"

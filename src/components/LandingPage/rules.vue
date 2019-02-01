@@ -21,7 +21,7 @@
                                 <div>
                                     <span v-for="bar in props.item.statusBar"
                                           :style="bar === 'success' ? 'color :green' : bar === 'pending' ? 'color: yellow' : 'color :red'"
-                                          class="title font-weight-black">–</span>
+                                          class="mr-1 title font-weight-black">–</span>
                                 </div>
                             </v-layout>
                             <v-text-field

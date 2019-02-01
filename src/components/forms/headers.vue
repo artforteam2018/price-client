@@ -73,8 +73,12 @@
                         :items="editedItem"
                     >
                         <template slot="items" slot-scope="props">
-                            <td>
-                                <v-edit-dialog :return-value.sync="editedItem[props.index]"large lazy>
+                            <td class="layout" style="width: 5rem">
+                                <v-icon class="text-md-center" @click="moveDown(props.index)">keyboard_arrow_down</v-icon>
+                                <v-icon class="text-md-center" @click="moveUp(props.index)">keyboard_arrow_up</v-icon>
+                            </td>
+                            <td style="width: 55rem">
+                                <v-edit-dialog :return-value.sync="editedItem[props.index]" large lazy>
                                     {{editedItem[props.index]}}
                                     <v-text-field
                                         slot="input"
@@ -127,6 +131,21 @@
             }
         },
         methods: {
+            moveUp(evt){
+                if (evt > 0) {
+                    let temp = this.editedItem[evt];
+                    this.$set(this.editedItem, evt, this.editedItem[evt - 1]);
+                    this.$set(this.editedItem, evt-1, temp);
+                }
+            },
+            moveDown(evt){
+                if (evt < this.editedItem.length-1) {
+
+                    let temp = this.editedItem[evt];
+                    this.$set(this.editedItem, evt, this.editedItem[evt + 1]);
+                    this.$set(this.editedItem, evt+1, temp);
+                }
+            },
             send() {
                 this.$emit('selectHeaders', this.selected);
                 this.dialog = false;

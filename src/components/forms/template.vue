@@ -134,9 +134,13 @@
                     <br><br>
                     <v-data-table hide-actions hide-headers @change="changeItem" slot="input" :items="editedItem">
                         <template slot="items" slot-scope="props">
-                            <td>
+                            <td class="layout" style="width: 5rem">
+                                <v-icon class="text-md-center" @click="moveDown(props.index)">keyboard_arrow_down</v-icon>
+                                <v-icon class="text-md-center" @click="moveUp(props.index)">keyboard_arrow_up</v-icon>
+                            </td>
+                            <td style="width: 55rem">
                                 <v-edit-dialog :return-value.sync="editedItem[props.index]" large lazy>
-                                    <div class="text-truncate" style="max-width: 50vw">{{editedItem[props.index]}}</div>
+                                    <div class="text-truncate" style="max-width: 30rem">{{editedItem[props.index]}}</div>
                                     <v-text-field
                                         slot="input"
                                         v-model="editedItem[props.index]"
@@ -193,6 +197,21 @@
             }
         },
         methods: {
+            moveUp(evt){
+                if (evt > 0) {
+                    let temp = this.editedItem[evt];
+                    this.$set(this.editedItem, evt, this.editedItem[evt - 1]);
+                    this.$set(this.editedItem, evt-1, temp);
+                }
+            },
+            moveDown(evt){
+                if (evt < this.editedItem.length-1) {
+
+                    let temp = this.editedItem[evt];
+                    this.$set(this.editedItem, evt, this.editedItem[evt + 1]);
+                    this.$set(this.editedItem, evt+1, temp);
+                }
+            },
             send() {
                 this.$emit('selectTemplate', this.selected);
                 this.dialog = false;
