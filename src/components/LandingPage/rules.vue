@@ -104,13 +104,17 @@
                         <v-icon small @click="getHistory(props)">history</v-icon>
                         <v-icon small @click="deleteItem(props.item)">delete</v-icon>
                     </td>
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
+                        <v-icon @click="sendNow(props.item)">send</v-icon>
+                    </td>
                 </template>
                 <template slot="expand" slot-scope="props">
                     <v-data-table hide-actions hide-headers slot="input" :items="props.item.expandLog">
                         <template slot="items" slot-scope="props">
-                            <td :class="props.item.success ? 'green lighten-5' : 'red lighten-5'">{{new
-                                Date(props.item.date).toLocaleString()}}
+                            <td :class="props.item.success === 'success' ? 'green lighten-5' : props.item.success === 'pending' ? 'yellow lighten-5' : 'red lighten-5'">
+                                {{new Date(props.item.date).toLocaleString()}}
                             </td>
+                            <td :class="props.item.success === 'success' ? 'green lighten-5' : props.item.success === 'pending' ? 'yellow lighten-5' : 'red lighten-5'">{{JSON.parse(props.item.info).response}}</td>
                         </template>
                     </v-data-table>
                 </template>
@@ -146,7 +150,8 @@
                     receiversComp: [],
                     removed: false,
                     expandLog: [],
-                    statusBar: []
+                    statusBar: [],
+                    send_now: false
                 },
                 data: null,
                 changesMade: false,
@@ -164,7 +169,8 @@
                     {text: 'Частота отправки', align: 'center', value: 'frequency'},
                     {text: 'Использовать', align: 'center', value: 'inUse'},
                     {text: 'Регион', align: 'center', value: 'region'},
-                    {text: 'Удалить', align: 'center', value: true}
+                    {text: 'Удалить', align: 'center', value: true},
+                    {text: 'Отправить сейчас', align: 'center', value: true}
                 ],
                 showSetPrices: false,
                 mailTransport: null,
@@ -273,6 +279,9 @@
             },
             quit(){
                 this.$store.dispatch('AUTH_LOGOUT')
+            },
+            sendNow(item){
+                item.sendNow = true;
             }
         },
         sockets: {
@@ -310,7 +319,8 @@
                         receiversComp: tab.receiversComp,
                         removed: tab.removed,
                         expandLog: [],
-                        statusBar: []
+                        statusBar: [],
+                        send_now: false
                     });
                 });
             },
