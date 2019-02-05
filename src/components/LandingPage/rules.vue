@@ -17,7 +17,10 @@
                     <td :class="props.item.removed ? 'grey' : ''">
                         <v-edit-dialog :return-value.sync="props.item.rule_name" large lazy>
                             <v-layout column>
-                                {{ props.item.rule_name }}
+                                <div>
+                                    {{ props.item.rule_name }}
+                                    <v-icon small @click="getHistory(props)">history</v-icon>
+                                </div>
                                 <div>
                                     <span v-for="bar in props.item.statusBar"
                                           :style="bar === 'success' ? 'color :green' : bar === 'pending' ? 'color: yellow' : 'color :red'"
@@ -67,7 +70,10 @@
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-layout row justify-space-between align-center>
-                            {{getTemplateStr(props.item.templatesComp)}}
+                            <div>
+                                {{getTemplateStr(props.item.templatesComp)}}
+                                <v-icon small @click="getUpdateHistory(props)">history</v-icon>
+                            </div>
                             <v-spacer></v-spacer>
                             <convert_rules :defaultSelect="props.item.templatesComp" @selectConvertRules="selectConvertRules($event, props.item)"></convert_rules>
                         </v-layout>
@@ -101,7 +107,6 @@
                         ></v-select>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
-                        <v-icon small @click="getHistory(props)">history</v-icon>
                         <v-icon small @click="deleteItem(props.item)">delete</v-icon>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
@@ -111,10 +116,12 @@
                 <template slot="expand" slot-scope="props">
                     <v-data-table hide-actions hide-headers slot="input" :items="props.item.expandLog">
                         <template slot="items" slot-scope="props">
-                            <td :class="props.item.success === 'success' ? 'green lighten-5' : props.item.success === 'pending' ? 'yellow lighten-5' : 'red lighten-5'">
+                            <td :class="props.item.success === 'success' || props.item.success === undefined ? 'green lighten-5' : props.item.success === 'pending' ? 'yellow lighten-5' : 'red lighten-5'">
                                 {{new Date(props.item.date).toLocaleString()}}
                             </td>
-                            <td :class="props.item.success === 'success' ? 'green lighten-5' : props.item.success === 'pending' ? 'yellow lighten-5' : 'red lighten-5'">{{JSON.parse(props.item.info).response}}</td>
+                            <td :class="props.item.success === 'success' || props.item.success === undefined ? 'green lighten-5' : props.item.success === 'pending' ? 'yellow lighten-5' : 'red lighten-5'">
+                                {{props.item.convert_rule === undefined ? JSON.parse(props.item.info).response : 'Прайс обновлен'}}
+                            </td>
                         </template>
                     </v-data-table>
                 </template>
@@ -269,7 +276,13 @@
                 item.frequency = evt.frequency;
                 this.changesMade = true;
             },
-
+            getUpdateHistory(props) {
+                props.expanded = !props.expanded;
+                this.$store.dispatch('GET_UPDATE_LOG', {rule: props.item.id, columns: 7})
+                    .then(result => {
+                        this.send_rules.filter(send => send.id === props.item.id)[0].expandLog = result.data;
+                    })
+            },
             getHistory(props) {
                 props.expanded = !props.expanded;
                 this.$store.dispatch('GET_SEND_LOG', {rule: props.item.id, columns: 7})

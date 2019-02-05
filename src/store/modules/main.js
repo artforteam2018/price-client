@@ -4,7 +4,7 @@ const state = {
     region: localStorage.getItem('region') || '',
     username2: '',
     status: '',
-    ip: "192.168.255.28",
+    ip: "localhost",
     axios: require('axios')
 };
 
@@ -164,6 +164,19 @@ const actions = {
                 })
         })
     },
+    GET_ONE_ROW: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getOneRow', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
     CHANGE_HEADERS: ({}, data) => {
         return new Promise((resolve, reject) => {
             this.default.state.axios({
@@ -240,6 +253,19 @@ const actions = {
         return new Promise((resolve, reject) => {
             this.default.state.axios({
                 url: 'http://' + this.default.state.ip + ':3535/getSendLog', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    GET_UPDATE_LOG: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getUpdateLog', data, method: 'POST'
             })
                 .then(resp => {
                     resolve(resp)

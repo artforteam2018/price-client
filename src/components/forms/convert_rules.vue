@@ -35,7 +35,7 @@
                         <td :class="props.item.removed ? 'grey' : ''">
                             <v-layout row justify-space-between align-center>
                                 {{props.item.template_name}}
-                                <template_t :defaultSelect="props.item.template" @selectTemplate="selectTemplate($event, props.item)"></template_t>
+                                <template_t :defaultSelect="props.item.template" :header="props.item.headers" :rules="selects" @selectTemplate="selectTemplate($event, props.item)"></template_t>
                             </v-layout>
                         </td>
                         <td :class="props.item.removed ? 'grey' : ''">

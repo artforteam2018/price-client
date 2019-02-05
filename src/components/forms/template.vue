@@ -67,9 +67,15 @@
         <v-dialog :width="imageHeight" v-model="dialog2" style="max-width: 50vw;" large lazy scrollable>
             <v-card>
                 <v-flex class="my-2 " layout row align-center justify-space-between>
-                    <div v-if="editedType === 1"><v-card-title class="title">Фильтры</v-card-title></div>
-                    <div v-if="editedType === 2"><v-card-title class="title">Формулы</v-card-title></div>
-                    <div v-if="editedType === 3"><v-card-title class="title">Объединения</v-card-title></div>
+                    <div v-if="editedType === 1">
+                        <v-card-title class="title">Фильтры</v-card-title>
+                    </div>
+                    <div v-if="editedType === 2">
+                        <v-card-title class="title">Формулы</v-card-title>
+                    </div>
+                    <div v-if="editedType === 3">
+                        <v-card-title class="title">Объединения</v-card-title>
+                    </div>
 
                     <v-btn @click="addItem2" flat color="green" small>
                         Добавить
@@ -78,77 +84,113 @@
                 </v-flex>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <div v-if="editedType === 1">
-                        <div class="title">Справка по настройке фильтров</div>
-                        <div class="body-2"><br>Настройка полей для фильтрации исходного файла. Каждая колонка будет
-                            обрабатывать колонку исходного файла под тем же номером.
-                        </div>
-                        <div class="title"><br>Описание ключевых команд для фильтрации:</div>
-                        <div class="body-2"><br><kbd>ЗАПОЛНЕНО</kbd> - колонка исходного файла, соответствующая той, в
-                            которой находится эта команда, будет
-                            отфильтрована по заполненым значениям. Все незаполненные будут проигнорированы.
-                        </div>
-                        <div class="body-2"><br><kbd>ЗАПОЛНЕНОЧИСЛО</kbd> - колонка будет отфильтрована по заполненым
-                            значениям. Все незаполненные будут проигнорированы. Дополнительно проигнорируются
-                            все нечисловые значения
-                        </div>
-                        <div class="body-2"><br><kbd>ВКЛЮЧАЕТ(СТРОКА)</kbd> или <kbd>ИСКЛЮЧАЕТ (СТРОКА)</kbd> - в
-                            результирующий файл будут включены только те строки, которые включают строку, или исключают.
-                        </div>
-                        <div class="body-2"><br><kbd>ИСКЛЮЧАЕТСИНДЕКСОМ(А;0)</kbd> или <kbd>ВКЛЮЧАЕТСИНДЕКСОМ(А;0)</kbd>
-                            - в результирующий файл будут включены только те строки, в которых символ под номером 0
-                            соответствует или не соответствует А. <br>
-                            Пример: <kbd>ВКЛЮЧАЕТСИНДЕКСОМ(Ж;3)</kbd> - в результат не попадут строки, в которых в этой
-                            колонке четвертый символ - буква Ж. слова коЖа, ноЖ попадают под фильтр.
-                        </div>
-                    </div>
-                    <div v-if="editedType === 2">
-                        <div class="title">Справка по настройке формул</div>
-                        <div class="body-2"><br>Настройка полей для расчета формул исходного файла. Каждая колонка будет
-                            обрабатывать колонку исходного файла под тем же номером.
-                        </div>
-                        <div class="title"><br>Описание ключевых команд для расчета формул:</div>
-                        <div class="body-2"><br>
-                            <kbd>A-Z</kbd> - буквы алфавита означают номер колонки. Номер буквы в алфавите соответствует
-                            номеру колонки в таблице 1-A, 2-B, 3-C, 4-D
-                        </div>
-                        <div class="body-2"><br>
-                            <kbd>ЕСЛИ(A>B;'А больше Б';'А меньше Б')</kbd> - формула - условие. Полностью соответствует
-                            формуле ЕСЛИ в excel.
-                        </div>
-                        <div class="body-2"><br><kbd>ЕЧИСЛО(ПОИСК('MOBIL';C))</kbd> - данная формула ищет строку MOBIL в
-                            колонке C, результат ИСТИНА или ЛОЖЬ, используется в связке с условием ЕСЛИ
-                        </div>
-                        <div class="body-2"><br><kbd>ОКРУГЛВВЕРХ(2.5;0)</kbd> или <kbd>ОКРУГЛВНИЗ(11.1;0)</kbd>
-                            - число до ; будет округлено вверх или вниз с точностью до того числа знаков, которое
-                            указано после ;
-                        </div>
-                    </div>
-                    <div v-if="editedType === 3">
-                        <div class="title">Справка по настройке объединений</div>
-                        <div class="body-2"><br>Настройка полей для объединений. Объединения настраиваются отдельно, так
-                            как дополнительные таблицы заносятся в базу.
-                        </div>
+                    <v-expansion-panel>
+                        <v-expansion-panel-content v-if="editedType === 1">
 
-                    </div>
-                    <br><br>
+                            <div slot="header">Справка по настройке фильтров</div>
+                            <div class="mx-2">
+                                <div class="body-2"><br>Настройка полей для фильтрации исходного файла. Каждая колонка
+                                    будет
+                                    обрабатывать колонку исходного файла под тем же номером.
+                                </div>
+                                <div class="title"><br>Описание ключевых команд для фильтрации:</div>
+                                <div class="body-2"><br><kbd>ЗАПОЛНЕНО</kbd> - колонка исходного файла, соответствующая
+                                    той, в
+                                    которой находится эта команда, будет
+                                    отфильтрована по заполненым значениям. Все незаполненные будут проигнорированы.
+                                </div>
+                                <div class="body-2"><br><kbd>ЗАПОЛНЕНОЧИСЛО</kbd> - колонка будет отфильтрована по
+                                    заполненым
+                                    значениям. Все незаполненные будут проигнорированы. Дополнительно проигнорируются
+                                    все нечисловые значения
+                                </div>
+                                <div class="body-2"><br><kbd>ВКЛЮЧАЕТ(СТРОКА)</kbd> или <kbd>ИСКЛЮЧАЕТ (СТРОКА)</kbd> -
+                                    в
+                                    результирующий файл будут включены только те строки, которые включают строку, или
+                                    исключают.
+                                </div>
+                                <div class="body-2"><br><kbd>ИСКЛЮЧАЕТСИНДЕКСОМ(А;0)</kbd> или <kbd>ВКЛЮЧАЕТСИНДЕКСОМ(А;0)</kbd>
+                                    - в результирующий файл будут включены только те строки, в которых символ под
+                                    номером 0
+                                    соответствует или не соответствует А. <br>
+                                    Пример: <kbd>ВКЛЮЧАЕТСИНДЕКСОМ(Ж;3)</kbd> - в результат не попадут строки, в которых
+                                    в этой
+                                    колонке четвертый символ - буква Ж. слова коЖа, ноЖ попадают под фильтр.
+                                </div>
+                            </div>
+                        </v-expansion-panel-content>
+                        <v-expansion-panel-content v-if="editedType === 2">
+
+                            <div slot="header">Справка по настройке формул</div>
+                            <div class="mx-2">
+                                <div class="body-2"><br>Настройка полей для расчета формул исходного файла. Каждая
+                                    колонка будет
+                                    обрабатывать колонку исходного файла под тем же номером.
+                                </div>
+                                <div class="title"><br>Описание ключевых команд для расчета формул:</div>
+                                <div class="body-2"><br>
+                                    <kbd>A-Z</kbd> - буквы алфавита означают номер колонки. Номер буквы в алфавите
+                                    соответствует
+                                    номеру колонки в таблице 1-A, 2-B, 3-C, 4-D
+                                </div>
+                                <div class="body-2"><br>
+                                    <kbd>ЕСЛИ(A>B;'А больше Б';'А меньше Б')</kbd> - формула - условие. Полностью
+                                    соответствует
+                                    формуле ЕСЛИ в excel.
+                                </div>
+                                <div class="body-2"><br><kbd>ЕЧИСЛО(ПОИСК('MOBIL';C))</kbd> - данная формула ищет строку
+                                    MOBIL в
+                                    колонке C, результат ИСТИНА или ЛОЖЬ, используется в связке с условием ЕСЛИ
+                                </div>
+                                <div class="body-2"><br><kbd>ОКРУГЛВВЕРХ(2.5;0)</kbd> или <kbd>ОКРУГЛВНИЗ(11.1;0)</kbd>
+                                    - число до ; будет округлено вверх или вниз с точностью до того числа знаков,
+                                    которое
+                                    указано после ;
+                                </div>
+                            </div>
+                        </v-expansion-panel-content>
+                        <v-expansion-panel-content v-if="editedType === 3">
+
+                            <div slot="header">Справка по настройке объединений</div>
+                            <div class="mx-2">
+                                <div class="body-2"><br>Настройка полей для объединений. Объединения настраиваются
+                                    отдельно, так
+                                    как дополнительные таблицы заносятся в базу.
+                                </div>
+                            </div>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                    <div class="mt-2"></div>
+                    <v-select v-if="editedType === 2"
+                        @change="getRow"
+                        v-model="rulesSelect"
+                        :items="rules"
+                        item-text="name"
+                        item-value="id"
+                        label="Выберите прайс для демо просмотра"
+                    ></v-select>
                     <v-data-table hide-actions hide-headers @change="changeItem" slot="input" :items="editedItem">
                         <template slot="items" slot-scope="props">
                             <td class="layout" style="width: 5rem">
-                                <v-icon class="text-md-center" @click="moveDown(props.index)">keyboard_arrow_down</v-icon>
+                                <v-icon class="text-md-center" @click="moveDown(props.index)">keyboard_arrow_down
+                                </v-icon>
                                 <v-icon class="text-md-center" @click="moveUp(props.index)">keyboard_arrow_up</v-icon>
                             </td>
+                            <td>{{editedHeader[props.index]}}</td>
                             <td style="width: 55rem">
                                 <v-edit-dialog :return-value.sync="editedItem[props.index]" large lazy>
-                                    <div class="text-truncate" style="max-width: 30rem">{{editedItem[props.index]}}</div>
+                                    <div class="text-truncate" style="max-width: 30rem">{{editedItem[props.index]}}
+                                    </div>
                                     <v-text-field
                                         slot="input"
+                                        @change="getRow"
                                         v-model="editedItem[props.index]"
                                         single-line
                                         autofocus
                                     ></v-text-field>
                                 </v-edit-dialog>
                             </td>
+                            <td v-if="editedType === 2">{{editedResult[props.index]}}</td>
                             <td class="text-md-center px-2">
                                 <v-icon small @click="deleteItem2(props)">delete</v-icon>
                             </td>
@@ -170,9 +212,11 @@
 <script>
     export default {
         name: "headers",
-        props:['defaultSelect'],
+        props: ['defaultSelect', 'header', 'rules'],
         data() {
             return {
+                rulesSelect: {},
+                headers: [],
                 dialog: false,
                 dialog2: false,
                 alertDialog: false,
@@ -192,24 +236,26 @@
                 maxId: 0,
                 changesMade: false,
                 editedItem: [],
+                editedResult: [],
+                editedHeader: [],
                 editedIndex: -1,
                 editedType: 0
             }
         },
         methods: {
-            moveUp(evt){
+            moveUp(evt) {
                 if (evt > 0) {
                     let temp = this.editedItem[evt];
                     this.$set(this.editedItem, evt, this.editedItem[evt - 1]);
-                    this.$set(this.editedItem, evt-1, temp);
+                    this.$set(this.editedItem, evt - 1, temp);
                 }
             },
-            moveDown(evt){
-                if (evt < this.editedItem.length-1) {
+            moveDown(evt) {
+                if (evt < this.editedItem.length - 1) {
 
                     let temp = this.editedItem[evt];
                     this.$set(this.editedItem, evt, this.editedItem[evt + 1]);
-                    this.$set(this.editedItem, evt+1, temp);
+                    this.$set(this.editedItem, evt + 1, temp);
                 }
             },
             send() {
@@ -236,7 +282,6 @@
                 this.editedItem.splice(item.index, 1)
             },
             openUnions(item) {
-                console.log(item);
                 this.dialog2 = true;
                 this.editedIndex = item.id;
                 this.editedItem = item.unions === null ? [] : item.unions.concat();
@@ -246,15 +291,30 @@
                 this.dialog2 = true;
                 this.editedIndex = item.id;
                 this.editedItem = item.formulas === null ? [] : item.formulas.concat();
+                this.editedResult = this.editedItem.concat();
                 this.editedType = 2;
+                this.editedHeader = [];
+                for (let i = 0; i < this.editedItem.length; i++) {
+                    this.editedHeader[i] = this.headers.filter(head => head.id === this.header)[0].columns[i]
+                }
             },
             openFilters(item) {
                 this.dialog2 = true;
                 this.editedIndex = item.id;
                 this.editedItem = item.filters === null ? [] : item.filters.concat();
                 this.editedType = 1;
+                this.editedHeader = [];
+                for (let i = 0; i < this.editedItem.length; i++) {
+                    this.editedHeader[i] = this.headers.filter(head => head.id === this.header)[0].columns[i]
+                }
             },
             refreshHeaders() {
+                this.$store.dispatch('GET_HEADERS')
+                    .then(result => {
+                        result.data.sort((a, b) => a.id > b.id ? 1 : -1);
+                        this.headers = [];
+                        this.headers = result.data;
+                    })
                 this.$store.dispatch('GET_TEMPLATE')
                     .then(result => {
                         result.data.sort((a, b) => a.id > b.id ? 1 : -1);
@@ -285,6 +345,14 @@
                 this.selects.filter(s => s.id === this.editedIndex)[0].unions = this.editedItem;
                 this.dialog2 = false;
                 this.changesMade = true;
+            },
+            getRow() {
+                if (this.editedType === 2) {
+                    this.$store.dispatch('GET_ONE_ROW', {data: {item: this.editedItem, rule: this.rulesSelect}})
+                        .then(result => {
+                            this.editedResult = result.data.data;
+                        });
+                }
             }
         },
         computed: {
