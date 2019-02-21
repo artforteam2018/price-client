@@ -4,7 +4,7 @@ const state = {
     region: localStorage.getItem('region') || '',
     username2: '',
     status: '',
-    ip: "localhost",
+    ip: "192.168.255.28",
     axios: require('axios')
 };
 
@@ -285,6 +285,16 @@ const actions = {
                 })
         })
     },
+    GET_USER_SETTINGS: ({}, data) => {
+        return new Promise(resolve => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getUserSettings', data, method: 'POST'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+        })
+    },
     CHANGE_SETTINGS: ({}, data) => {
         return new Promise((resolve, reject) => {
             this.default.state.axios({
@@ -298,6 +308,20 @@ const actions = {
                 })
         })
     },
+
+    CHANGE_USER_SETTINGS: ({}, data) => {
+    return new Promise((resolve, reject) => {
+        this.default.state.axios({
+            url: 'http://' + this.default.state.ip + ':3535/changeUserSettings', data, method: 'POST'
+        })
+            .then(resp => {
+                resolve(resp)
+            })
+            .catch(err => {
+                reject(err)
+            })
+    })
+},
 
 };
 

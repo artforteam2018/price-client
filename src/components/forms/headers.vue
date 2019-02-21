@@ -181,8 +181,9 @@
                         this.selects = [];
                         this.selects = result.data;
                         this.maxId = result.data[result.data.length - 1].id;
-                        console.log(this.defaultSelect)
-                        this.selected.push(this.selects.filter(s => s.id === this.defaultSelect)[0])
+                        if (this.defaultSelect !== -1) {
+                            this.selected.push(this.selects.filter(s => s.id === this.defaultSelect)[0])
+                        }
                     })
             },
             updateTable() {

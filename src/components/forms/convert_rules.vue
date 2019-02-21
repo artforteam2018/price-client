@@ -144,6 +144,7 @@
                 this.changesMade = true;
             },
             addItem() {
+
                 this.selects.push({
                     name: '',
                     template_name: '',

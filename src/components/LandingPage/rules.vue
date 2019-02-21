@@ -107,6 +107,12 @@
                         ></v-select>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
+                        <v-layout row justify-space-between align-center>
+                            <groups :index="props.index" @selectGroups="selectGroups($event, props.item)" :groups="props.item.groups" :templates="props.item.templatesComp"></groups>
+                            <v-spacer></v-spacer>
+                        </v-layout>
+                    </td>
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-icon small @click="deleteItem(props.item)">delete</v-icon>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
@@ -132,6 +138,7 @@
 
 <script>
     import datePicker from '../forms/date-picker'
+    import groups from '../forms/groups'
     import receivers from '../forms/receivers'
     import senders from '../forms/senders'
     import convert_rules from '../forms/convert_rules'
@@ -151,14 +158,16 @@
                     frequency: {days: 0, hours: 0, minutes: 0},
                     sender_name: '',
                     title: '',
+                    region: '',
+                    groups: '',
+                    send_now: false,
                     templates: [],
                     templatesComp: [],
                     receivers: [],
                     receiversComp: [],
                     removed: false,
                     expandLog: [],
-                    statusBar: [],
-                    send_now: false
+                    statusBar: []
                 },
                 data: null,
                 changesMade: false,
@@ -176,6 +185,7 @@
                     {text: 'Частота отправки', align: 'center', value: 'frequency'},
                     {text: 'Использовать', align: 'center', value: 'inUse'},
                     {text: 'Регион', align: 'center', value: 'region'},
+                    {text: 'Группировка', align: 'center', value: 'group'},
                     {text: 'Удалить', align: 'center', value: true},
                     {text: 'Отправить сейчас', align: 'center', value: true}
                 ],
@@ -185,7 +195,7 @@
                 select: [],
             }
         },
-        components: {datePicker, receivers, convert_rules, senders},
+        components: {datePicker, receivers, convert_rules, senders, groups},
         methods: {
             getTemplateStr(templates) {
                 let str = '';
@@ -219,6 +229,11 @@
                 });
                 this.send_rules[this.send_rules.indexOf(item)].templatesComp = templatesCompColumn;
                 this.send_rules[this.send_rules.indexOf(item)].templates = idColumn;
+                this.changesMade = true;
+            },
+            selectGroups(evt, item) {
+
+                this.send_rules[this.send_rules.indexOf(item)].groups = evt.groups.map(g => g.join('; ')).join(', ');
                 this.changesMade = true;
             },
             selectReceivers(evt, item) {
@@ -277,24 +292,26 @@
                 this.changesMade = true;
             },
             getUpdateHistory(props) {
-                props.expanded = !props.expanded;
                 this.$store.dispatch('GET_UPDATE_LOG', {rule: props.item.id, columns: 7})
                     .then(result => {
                         this.send_rules.filter(send => send.id === props.item.id)[0].expandLog = result.data;
+                        props.expanded = !props.expanded;
                     })
             },
             getHistory(props) {
-                props.expanded = !props.expanded;
                 this.$store.dispatch('GET_SEND_LOG', {rule: props.item.id, columns: 7})
                     .then(result => {
                         this.send_rules.filter(send => send.id === props.item.id)[0].expandLog = result.data;
+                        props.expanded = !props.expanded;
                     })
+
             },
             quit(){
                 this.$store.dispatch('AUTH_LOGOUT')
             },
             sendNow(item){
-                item.sendNow = true;
+                item.send_now = true;
+                this.updateTable();
             }
         },
         sockets: {
@@ -314,6 +331,11 @@
                     tab.receivers.forEach(receive => {
                         tab.receiversComp.push(receiversComp.filter(rec => rec.id === receive)[0]);
                     });
+
+                    if (tab.groups === ""){
+                        tab.groups = tab.templates.join(', ');
+                    }
+
                     this.send_rules.push({
                         rule_name: tab['rule_name'],
                         sender: tab.sender,
@@ -326,14 +348,15 @@
                         sender_name: sendersComp.filter(send => send.id === tab.sender)[0].name,
                         title: tab.title,
                         region: tab.region,
+                        groups: tab.groups,
+                        send_now: false,
                         templates: tab.templates,
                         templatesComp: tab.templatesComp,
                         receivers: tab.receivers,
                         receiversComp: tab.receiversComp,
                         removed: tab.removed,
                         expandLog: [],
-                        statusBar: [],
-                        send_now: false
+                        statusBar: []
                     });
                 });
             },

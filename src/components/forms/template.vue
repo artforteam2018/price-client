@@ -147,6 +147,12 @@
                                     которое
                                     указано после ;
                                 </div>
+                                <div class="body-2"><br><kbd>КУРС(EUR)</kbd>
+                                    - вместо этой надписи в формулу подставится текущий курс указанной в скобках валюты
+                                    по отношению к рублю. Список валют, доступных к указанию и их написание можно увидеть
+                                    на сайте <a href="http://www.cbr.ru/currency_base/daily/">Центробанка</a>
+                                </div>
+
                             </div>
                         </v-expansion-panel-content>
                         <v-expansion-panel-content v-if="editedType === 3">
@@ -321,7 +327,9 @@
                         this.selects = [];
                         this.selects = result.data;
                         this.maxId = result.data[result.data.length - 1].id
-                        this.selected.push(this.selects.filter(s => s.id === this.defaultSelect)[0])
+                        if (this.defaultSelect !== -1) {
+                            this.selected.push(this.selects.filter(s => s.id === this.defaultSelect)[0])
+                        }
                     })
             },
             updateTable() {
