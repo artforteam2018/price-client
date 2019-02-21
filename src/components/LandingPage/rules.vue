@@ -15,11 +15,13 @@
             <v-data-table item-key="id" ref="tt" data-app :headers="headers" :items="send_rules">
                 <template slot="items" slot-scope="props">
                     <td :class="props.item.removed ? 'grey' : ''">
+                        <v-flex layout row>
+                        <v-icon class="mr-1" small @click="getHistory(props)">history</v-icon>
                         <v-edit-dialog :return-value.sync="props.item.rule_name" large lazy>
                             <v-layout column>
                                 <div>
                                     {{ props.item.rule_name }}
-                                    <v-icon small @click="getHistory(props)">history</v-icon>
+
                                 </div>
                                 <div>
                                     <span v-for="bar in props.item.statusBar"
@@ -36,6 +38,7 @@
                                 class="offset-md3"
                             ></v-text-field>
                         </v-edit-dialog>
+                        </v-flex>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-layout row justify-space-between align-center>
@@ -126,7 +129,7 @@
                                 {{new Date(props.item.date).toLocaleString()}}
                             </td>
                             <td :class="props.item.success === 'success' || props.item.success === undefined ? 'green lighten-5' : props.item.success === 'pending' ? 'yellow lighten-5' : 'red lighten-5'">
-                                {{props.item.convert_rule === undefined ? JSON.parse(props.item.info).response : 'Прайс обновлен'}}
+                                {{props.item.convert_rule === undefined ? JSON.parse(props.item.info) === null ? props.item.info : JSON.parse(props.item.info).response : 'Прайс обновлен'}}
                             </td>
                         </template>
                     </v-data-table>
