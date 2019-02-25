@@ -6,6 +6,7 @@
                 <v-img src="static/img/logo/logo_all_planeta.png"></v-img>
             </v-flex>
             <v-flex row layout align-center>
+                <v-btn v-if="gmPwd" class="red lighten-5" flat>Пароль к порталу GM устарел!</v-btn>
                 <v-btn flat>Текущий пользователь: {{getUsername}}</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn flat @click="addItem">Добавить правило</v-btn>
@@ -196,9 +197,16 @@
                 mailTransport: null,
                 refreshInterval: null,
                 select: [],
+                gmPwd: false
             }
         },
         components: {datePicker, receivers, convert_rules, senders, groups},
+        async created(){
+            this.gmPwd = await (this.getGmPwd(1));
+          setInterval(async ()=>{
+              this.gmPwd = await (this.getGmPwd(1));
+          }, 20000)
+        },
         methods: {
             getTemplateStr(templates) {
                 let str = '';
@@ -233,6 +241,7 @@
                 this.send_rules[this.send_rules.indexOf(item)].templatesComp = templatesCompColumn;
                 this.send_rules[this.send_rules.indexOf(item)].templates = idColumn;
                 this.changesMade = true;
+                this.send_rules[this.send_rules.indexOf(item)].groups = this.send_rules[this.send_rules.indexOf(item)].templates.join(', ');
             },
             selectGroups(evt, item) {
 
@@ -295,6 +304,7 @@
                 this.changesMade = true;
             },
             getUpdateHistory(props) {
+                console.log(props.item)
                 this.$store.dispatch('GET_UPDATE_LOG', {rule: props.item.id, columns: 7})
                     .then(result => {
                         this.send_rules.filter(send => send.id === props.item.id)[0].expandLog = result.data;
@@ -377,6 +387,7 @@
             mapGetters([
                 'getConvertRulesComp',
                 'getSendersComp',
+                'getGmPwd',
                 'getReceiversComp',
                 'getUsername',
                 'getToken',

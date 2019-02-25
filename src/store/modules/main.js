@@ -4,7 +4,8 @@ const state = {
     region: localStorage.getItem('region') || '',
     username2: '',
     status: '',
-    ip: "192.168.255.28",
+    //ip: "192.168.255.28",
+    ip: "localhost",
     axios: require('axios')
 };
 
@@ -332,6 +333,19 @@ const getters = {
     isAuthenticated: state => !!state.token,
     authStatus: state => state.status,
     getUsername: state => state.username,
+    getGmPwd: state =>  id => {
+        return new Promise((resolve, reject) => {
+            state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getGmPwd', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp.data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
     getRegion: state => state.region,
     getToken: state  => state.token,
     getConvertRulesComp: state => id => {

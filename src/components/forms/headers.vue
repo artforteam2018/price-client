@@ -35,6 +35,9 @@
                             {{props.item.columns.join(', ')}}
                         </td>
                         <td :class="props.item.removed ? 'grey' : ''" class="text-md-center px-2">
+                            <v-icon small @click="copyItem(props.item)">library_add</v-icon>
+                        </td>
+                        <td :class="props.item.removed ? 'grey' : ''" class="text-md-center px-2">
                             <v-icon small @click="deleteItem(props.item)">delete</v-icon>
                         </td>
                     </template>
@@ -88,6 +91,7 @@
                                     ></v-text-field>
                                 </v-edit-dialog>
                             </td>
+
                             <td class="text-md-center px-2">
                                 <v-icon small @click="deleteItem2(props)">delete</v-icon>
                             </td>
@@ -118,7 +122,9 @@
                 head: [
                     {text: "Имя", align: 'center', value: 'name'},
                     {text: "Колонки", align: 'center', value: 'columns'},
-                    {text: 'Удалить', align: 'center', value: true}
+                    {text: 'Скопировать', align: 'center', value: true},
+                    {text: 'Удалить', align: 'center', value: true},
+
                 ],
                 defaultItem: {
                     name: '',
@@ -164,6 +170,12 @@
             deleteItem(item) {
                 item.removed = true;
                 this.$set(this.selects, this.selects.indexOf(item), item);
+                this.changesMade = true;
+            },
+            copyItem(item) {
+                let it = Object.assign({}, item);
+                it.id = ++this.maxId;
+                this.selects.push(it);
                 this.changesMade = true;
             },
             deleteItem2(item) {

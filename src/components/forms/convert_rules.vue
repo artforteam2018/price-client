@@ -81,6 +81,9 @@
                             </v-layout>
                         </td>
                         <td :class="props.item.removed ? 'grey' : ''" class="text-md-center px-2">
+                            <v-icon small @click="copyItem(props.item)">library_add</v-icon>
+                        </td>
+                        <td :class="props.item.removed ? 'grey' : ''" class="text-md-center px-2">
                             <v-icon small @click="deleteItem(props.item)">delete</v-icon>
                         </td>
                     </template>
@@ -124,6 +127,7 @@
                     {text: "Фильтр заголовка файла", align: 'center', value: 'filter'},
                     {text: "Фильтр заголовка письма", align: 'center', value: 'title_filter'},
                     {text: "Заголовки", align: 'center', value: 'headers_name'},
+                    {text: 'Скопировать', align: 'center', value: true},
                     {text: 'Удалить', align: 'center', value: true}
                 ],
                 defaultItem: {
@@ -154,14 +158,19 @@
                     title_filter: '',
                     headers: -1,
                     headers_name: '',
-                    id: this.maxId + 1
+                    id: ++this.maxId
                 });
-                this.maxId = this.maxId + 1;
                 this.changesMade = true;
             },
             deleteItem(item) {
                 item.removed = true;
                 this.$set(this.selects, this.selects.indexOf(item), item);
+                this.changesMade = true;
+            },
+            copyItem(item) {
+                let it = Object.assign({}, item);
+                it.id = ++this.maxId;
+                this.selects.push(it);
                 this.changesMade = true;
             },
             refreshReceivers() {
@@ -192,7 +201,7 @@
                             this.selected.push(this.selects.filter(s => s.id === select.id)[0])
                         });
 
-                        this.maxId = result.data[result.data.length - 1].id
+                        this.maxId = result.data[result.data.length - 1].id + 1
                     })
             },
             updateTable() {

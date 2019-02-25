@@ -44,6 +44,9 @@
                                 {{props.item.unions ? props.item.unions.join(', ') : 'Нет объединений'}}
                             </td>
                             <td :class="props.item.removed ? 'grey' : ''" class="text-md-center px-2">
+                                <v-icon small @click="copyItem(props.item)">library_add</v-icon>
+                            </td>
+                            <td :class="props.item.removed ? 'grey' : ''" class="text-md-center px-2">
                                 <v-icon small @click="deleteItem(props.item)">delete</v-icon>
                             </td>
                         </template>
@@ -64,7 +67,7 @@
                 <v-card-text>Изменения успешно внесены!</v-card-text>
             </v-card>
         </v-dialog>
-        <v-dialog :width="imageHeight" v-model="dialog2" style="max-width: 50vw;" large lazy scrollable>
+        <v-dialog @input="clearParams" :width="imageHeight" v-model="dialog2" style="max-width: 50vw;" large lazy scrollable>
             <v-card>
                 <v-flex class="my-2 " layout row align-center justify-space-between>
                     <div v-if="editedType === 1">
@@ -175,6 +178,16 @@
                         item-value="id"
                         label="Выберите прайс для демо просмотра"
                     ></v-select>
+                    <v-divider v-if="editedType === 2" class="my-2"></v-divider>
+                    <v-data-table v-if="editedType === 2" hide-actions @change="changeItem" slot="input" :items="threeRows">
+                        <template slot="headers" slot-scope="props">
+                            <td class="text-md-center light-green lighten-4"  v-for="prop, index in threeRows[0]">{{('ABCDEFGHIJKLMNOPQRSTUVWXYZ')[index]}}</td>
+                        </template>
+                        <template slot="items" slot-scope="props">
+                            <td  class="text-md-center light-green lighten-5" v-for="i in props.item">{{i}}</td>
+                        </template>
+                    </v-data-table>
+                    <v-divider v-if="editedType === 2" class="my-2"></v-divider>
                     <v-data-table hide-actions hide-headers @change="changeItem" slot="input" :items="editedItem">
                         <template slot="items" slot-scope="props">
                             <td class="layout" style="width: 5rem">
@@ -233,6 +246,7 @@
                     {text: "Фильтры", align: 'center', value: 'filters'},
                     {text: "Формулы", align: 'center', value: 'formulas'},
                     {text: "Объединения", align: 'center', value: 'unions'},
+                    {text: 'Скопировать', align: 'center', value: true},
                     {text: 'Удалить', align: 'center', value: true}
                 ],
                 defaultItem: {
@@ -245,10 +259,15 @@
                 editedResult: [],
                 editedHeader: [],
                 editedIndex: -1,
-                editedType: 0
+                editedType: 0,
+                threeRows: []
             }
         },
         methods: {
+            clearParams(){
+                this.threeRows = [];
+                this.rulesSelect = {};
+            },
             moveUp(evt) {
                 if (evt > 0) {
                     let temp = this.editedItem[evt];
@@ -276,7 +295,13 @@
             },
             addItem() {
                 this.selects.push({pseudoname: '', filters: [], formulas: [], unions: null});
-                this.maxId = this.maxId + 1;
+                this.maxId = ++this.maxId;
+                this.changesMade = true;
+            },
+            copyItem(item) {
+                let it = Object.assign({}, item);
+                it.id = ++this.maxId;
+                this.selects.push(it);
                 this.changesMade = true;
             },
             deleteItem(item) {
@@ -320,13 +345,13 @@
                         result.data.sort((a, b) => a.id > b.id ? 1 : -1);
                         this.headers = [];
                         this.headers = result.data;
-                    })
+                    });
                 this.$store.dispatch('GET_TEMPLATE')
                     .then(result => {
                         result.data.sort((a, b) => a.id > b.id ? 1 : -1);
                         this.selects = [];
                         this.selects = result.data;
-                        this.maxId = result.data[result.data.length - 1].id
+                        this.maxId = result.data[result.data.length - 1].id + 1
                         if (this.defaultSelect !== -1) {
                             this.selected.push(this.selects.filter(s => s.id === this.defaultSelect)[0])
                         }
@@ -359,6 +384,7 @@
                     this.$store.dispatch('GET_ONE_ROW', {data: {item: this.editedItem, rule: this.rulesSelect}})
                         .then(result => {
                             this.editedResult = result.data.data;
+                            this.threeRows = result.data.threeRows;
                         });
                 }
             }
