@@ -4,8 +4,8 @@ const state = {
     region: localStorage.getItem('region') || '',
     username2: '',
     status: '',
-    ip: "192.168.255.28",
-    //ip: "localhost",
+    //ip: "192.168.255.28",
+    ip: "localhost",
     axios: require('axios')
 };
 
@@ -136,6 +136,16 @@ const actions = {
         return new Promise(resolve => {
             this.default.state.axios({
                 url: 'http://' + this.default.state.ip + ':3535/getTemplates', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+        })
+    },
+    GET_ADD: ({}) => {
+        return new Promise(resolve => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getAdd', method: 'GET'
             })
                 .then(resp => {
                     resolve(resp)
@@ -404,6 +414,19 @@ const getters = {
         return new Promise((resolve, reject) => {
             state.axios({
                 url: 'http://' + this.default.state.ip + ':3535/getHeadersComp', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp.data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getAddComp: state => id => {
+        return new Promise((resolve, reject) => {
+            state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/getAddComp', method: 'GET'
             })
                 .then(resp => {
                     resolve(resp.data)

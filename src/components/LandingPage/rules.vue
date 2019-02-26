@@ -304,7 +304,6 @@
                 this.changesMade = true;
             },
             getUpdateHistory(props) {
-                console.log(props.item)
                 this.$store.dispatch('GET_UPDATE_LOG', {rule: props.item.id, columns: 7})
                     .then(result => {
                         this.send_rules.filter(send => send.id === props.item.id)[0].expandLog = result.data;

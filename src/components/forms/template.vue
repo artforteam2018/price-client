@@ -274,6 +274,7 @@
                     this.$set(this.editedItem, evt, this.editedItem[evt - 1]);
                     this.$set(this.editedItem, evt - 1, temp);
                 }
+                this.getRow()
             },
             moveDown(evt) {
                 if (evt < this.editedItem.length - 1) {
@@ -282,6 +283,7 @@
                     this.$set(this.editedItem, evt, this.editedItem[evt + 1]);
                     this.$set(this.editedItem, evt + 1, temp);
                 }
+                this.getRow()
             },
             send() {
                 this.$emit('selectTemplate', this.selected);

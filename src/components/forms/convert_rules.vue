@@ -80,6 +80,12 @@
                                 <headers :defaultSelect="props.item.headers" @selectHeaders="selectHeaders($event, props.item)"></headers>
                             </v-layout>
                         </td>
+                        <td :class="props.item.removed ? 'grey' : ''">
+                            <v-layout row justify-space-between align-center>
+                                {{props.item.add_tables_id_name}}
+                                <addtables :defaultSelect="props.item.add_tables_id" @selectAddTables="selectAddTables($event, props.item)"></addtables>
+                            </v-layout>
+                        </td>
                         <td :class="props.item.removed ? 'grey' : ''" class="text-md-center px-2">
                             <v-icon small @click="copyItem(props.item)">library_add</v-icon>
                         </td>
@@ -108,6 +114,7 @@
 
 <script>
     import headers from './headers'
+    import addtables from './addtables'
     import template_t from './template'
     import {mapGetters} from 'vuex'
 
@@ -127,6 +134,7 @@
                     {text: "Фильтр заголовка файла", align: 'center', value: 'filter'},
                     {text: "Фильтр заголовка письма", align: 'center', value: 'title_filter'},
                     {text: "Заголовки", align: 'center', value: 'headers_name'},
+                    {text: "Доп. таблицы", align: 'center', value: 'addtables'},
                     {text: 'Скопировать', align: 'center', value: true},
                     {text: 'Удалить', align: 'center', value: true}
                 ],
@@ -138,7 +146,7 @@
                 changesMade: false
             }
         },
-        components: {headers, template_t},
+        components: {headers, template_t, addtables},
         methods: {
             send() {
                 this.$emit('selectConvertRules', this.selected);
@@ -158,6 +166,7 @@
                     title_filter: '',
                     headers: -1,
                     headers_name: '',
+                    add_tables_id: [],
                     id: ++this.maxId
                 });
                 this.changesMade = true;
@@ -176,9 +185,11 @@
             refreshReceivers() {
                 this.$store.dispatch('GET_TEMPLATES')
                     .then(async result => {
+                        console.log(result)
                         result.data.sort((a, b) => a.id > b.id ? 1 : -1);
                         let templatesComp = await this.getTemplatesComp(1);
                         let headersComp = await this.getHeadersComp(1);
+                        let addComp = await this.getAddComp(1);
                         this.selects = [];
                         await Promise.all(result.data.map(res => {
                             return new Promise(resolve => {
@@ -192,7 +203,9 @@
                                     template: res.template,
                                     headers: res.headers,
                                     removed: res.removed,
-                                    headers_name: headersComp.filter(head => head.id === res.headers)[0].name
+                                    headers_name: headersComp.filter(head => head.id === res.headers)[0].name,
+                                    add_tables_id: res.add_tables_id,
+                                    add_tables_id_name: addComp.filter(head => res.add_tables_id.includes(head.id)).map(a => a.name).join(', '),
                                 });
                                 resolve();
                             })
@@ -217,6 +230,12 @@
                 this.selects[this.selects.indexOf(item)].headers_name = headersComp.filter(head => head.id === evt[0].id)[0].name;
                 this.changesMade = true;
             },
+            async selectAddTables(evt, item) {
+                let addComp = await this.getAddComp(1);
+                this.selects[this.selects.indexOf(item)].add_tables_id = evt.map(e => e.id);
+                this.selects[this.selects.indexOf(item)].add_tables_id_name = addComp.filter(head => this.selects[this.selects.indexOf(item)].add_tables_id .includes(head.id)).map(a => a.name).join(', ');
+    this.changesMade = true;
+            },
             async selectTemplate(evt, item) {
                 let templatesComp = await this.getTemplatesComp(1);
                 this.selects[this.selects.indexOf(item)].template = evt[0].id;
@@ -227,7 +246,8 @@
         computed:
             mapGetters([
                 'getTemplatesComp',
-                'getHeadersComp'
+                'getHeadersComp',
+                'getAddComp'
             ])
     }
 </script>
