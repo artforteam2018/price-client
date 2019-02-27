@@ -117,6 +117,13 @@
                         </v-layout>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
+                        <v-checkbox @change="changesMade = true" class="justify-center" hide-details
+                                    v-model="props.item.xls"></v-checkbox>
+                    </td>
+                    <td :class="props.item.removed ? 'grey' : ''" class="text-md-center px-2">
+                        <v-icon small @click="copyItem(props.item)">library_add</v-icon>
+                    </td>
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-icon small @click="deleteItem(props.item)">delete</v-icon>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
@@ -153,8 +160,8 @@
         data() {
             return {
                 defaultItem: {
-                    rule_name: '',
-                    sender: '',
+                    rule_name: 'имя',
+                    sender: 1,
                     subscribe_to_update: false,
                     result_name: '',
                     in_use: true,
@@ -164,6 +171,7 @@
                     title: '',
                     region: '',
                     groups: '',
+                    xls: false,
                     send_now: false,
                     templates: [],
                     templatesComp: [],
@@ -172,6 +180,7 @@
                     removed: false,
                     expandLog: [],
                     statusBar: []
+
                 },
                 data: null,
                 changesMade: false,
@@ -190,6 +199,8 @@
                     {text: 'Использовать', align: 'center', value: 'inUse'},
                     {text: 'Регион', align: 'center', value: 'region'},
                     {text: 'Группировка', align: 'center', value: 'group'},
+                    {text: 'XLS', align: 'center', value: 'xls'},
+                    {text: 'Скопировать', align: 'center', value: true},
                     {text: 'Удалить', align: 'center', value: true},
                     {text: 'Отправить сейчас', align: 'center', value: true}
                 ],
@@ -252,7 +263,7 @@
                 let receiversCompColumn = [];
                 let newReceiverColumn = [];
                 evt.forEach(e => {
-                    newReceiverColumn.push({name: e.name});
+                    newReceiverColumn.push({id: e.id, name: e.name});
                     receiversCompColumn.push(e.id);
                 });
                 this.send_rules[this.send_rules.indexOf(item)].receiversComp = newReceiverColumn;
@@ -278,6 +289,12 @@
             },
             addItem() {
                 this.send_rules.push(this.defaultItem);
+                this.changesMade = true;
+            },
+            copyItem(item) {
+                let it = Object.assign({}, item);
+                it.id = ++this.maxId;
+                this.send_rules.push(it);
                 this.changesMade = true;
             },
             deleteItem(item) {
@@ -361,6 +378,7 @@
                         title: tab.title,
                         region: tab.region,
                         groups: tab.groups,
+                        xls: tab.xls,
                         send_now: false,
                         templates: tab.templates,
                         templatesComp: tab.templatesComp,

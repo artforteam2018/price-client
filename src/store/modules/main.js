@@ -4,8 +4,8 @@ const state = {
     region: localStorage.getItem('region') || '',
     username2: '',
     status: '',
-    ip: "192.168.255.28",
-    //ip: "localhost",
+    //ip: "192.168.255.28",
+    ip: "localhost",
     axios: require('axios')
 };
 

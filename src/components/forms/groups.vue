@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-menu v-model="menu" :close-on-content-click="false" attach offset-x>
-            <v-btn flat small slot="activator">{{groups.split(', ').map(g => g.split('; ').map(gg => templates.filter(t => t.id === parseInt(gg))[0].name).join('; ')).join(', ')}}</v-btn>
+            <v-btn flat small slot="activator">{{groups === '' ? '' : groups.split(', ').map(g => g.split('; ').map(gg => templates.filter(t => t.id === parseInt(gg))[0].name).join('; ')).join(', ')}}</v-btn>
 
             <v-card class="px-4">
                 <v-layout row>

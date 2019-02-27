@@ -185,7 +185,6 @@
             refreshReceivers() {
                 this.$store.dispatch('GET_TEMPLATES')
                     .then(async result => {
-                        console.log(result)
                         result.data.sort((a, b) => a.id > b.id ? 1 : -1);
                         let templatesComp = await this.getTemplatesComp(1);
                         let headersComp = await this.getHeadersComp(1);
@@ -210,6 +209,7 @@
                                 resolve();
                             })
                         }));
+                        this.selected = [];
                         this.defaultSelect.forEach(select => {
                             this.selected.push(this.selects.filter(s => s.id === select.id)[0])
                         });
