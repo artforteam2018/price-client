@@ -26,7 +26,7 @@
                                 </div>
                                 <div>
                                     <span v-for="bar in props.item.statusBar"
-                                          :style="bar === 'success' ? 'color :green' : bar === 'pending' ? 'color: yellow' : 'color :red'"
+                                          :style="bar === 'success' ? 'color: green' : bar === 'pending' ? 'color: yellow' : 'color: red'"
                                           class="mr-1 title font-weight-black">–</span>
                                 </div>
                             </v-layout>
@@ -391,13 +391,15 @@
                 });
             },
             async updateSendLog(answer) {
-                if (answer.log.length > 0) {
-                    let filtered_rules = this.send_rules.filter(send => send.id === answer.log[0].send_rule);
+                answer.log.forEach(logg => {
+                if (logg.length > 0) {
+                    let filtered_rules = this.send_rules.filter(send => send.id === logg[0].send_rule);
                     if (filtered_rules.length > 0) filtered_rules[0].statusBar = [];
-                    answer.log.forEach(log => {
+                   logg.forEach(log => {
                         if (filtered_rules.length > 0) filtered_rules[0].statusBar.push(log.success);
                     })
                 }
+                });
             }
         },
         computed:
@@ -415,4 +417,14 @@
 </script>
 
 <style scoped>
+    .colorg{
+        coror:green;
+    }
+    .colory{
+        coror:yellow;
+    }
+    .colorr{
+        coror:red;
+    }
+
 </style>
