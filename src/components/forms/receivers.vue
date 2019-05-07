@@ -1,19 +1,32 @@
-<template>
+﻿<template>
 
     <v-dialog v-model="dialog" scrollable max-width="80vw">
         <v-btn slot="activator" @click="refreshReceivers" flat icon color="grey">
             <v-icon>ballot</v-icon>
         </v-btn>
         <v-card>
-            <v-flex class="my-2 " layout row align-center justify-space-between>
+            <v-flex class="mt-4" layout row align-center justify-space-between>
                 <v-card-title class="title">Получатели</v-card-title>
                 <v-btn @click="addItem" flat color="green" small>
                     Добавить <v-icon>add</v-icon>
                 </v-btn>
             </v-flex>
+	    <v-card-title>
+      		<v-spacer></v-spacer>
+		<v-flex xs-4 layout row>
+      		<v-text-field class="xs-4"
+       			v-model="search"
+        		append-icon="search"
+        		label="Поиск"
+        		single-line
+        		hide-details
+      		></v-text-field>
+		</v-flex>
+	    </v-card-title>
             <v-divider></v-divider>
             <v-card-text class="no-scroll-x">
-                <v-data-table select-all hide-actions :headers="head" :items="selects" v-model="selected">
+                <v-data-table select-all hide-actions :search="search" :headers="head" :items="selects" v-model="selected">
+
                     <template slot="items" slot-scope="props">
                         <td :class="props.item.removed ? 'grey' : ''">
                             <v-checkbox v-model="props.selected" hide-details></v-checkbox>
@@ -71,6 +84,7 @@
         props: ['defaultSelect'],
         data() {
             return {
+		search: '',
                 dialog: false,
                 alertDialog: false,
                 selects: [],

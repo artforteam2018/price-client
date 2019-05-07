@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 
     <v-dialog v-model="dialog" scrollable>
         <v-btn slot="activator" @click="refreshReceivers" flat icon color="grey">
@@ -27,6 +27,18 @@
                                     @change="changeItem"
                                     slot="input"
                                     v-model="props.item.name"
+                                    single-line
+                                    autofocus
+                                ></v-text-field>
+                            </v-edit-dialog>
+                        </td>
+			<td :class="props.item.removed ? 'grey' : ''">
+                            <v-edit-dialog :return-value.sync="props.item.list_name" large lazy>
+                                {{props.item.list_name}}
+                                <v-text-field
+                                    @change="changeItem"
+                                    slot="input"
+                                    v-model="props.item.list_name"
                                     single-line
                                     autofocus
                                 ></v-text-field>
@@ -129,6 +141,7 @@
                 selected: [],
                 head: [
                     {text: "Имя", align: 'center', value: 'name'},
+		    {text: "Имя листа", align: 'center', value: 'list_name'},
                     {text: "Шаблон формирования", align: 'center', value: 'template_name'},
                     {text: "Отправитель", align: 'center', value: 'sender'},
                     {text: "Фильтр заголовка файла", align: 'center', value: 'filter'},
@@ -194,6 +207,7 @@
                             return new Promise(resolve => {
                                 this.selects.push({
                                     name: res.name,
+				    list_name: res.list_name,
                                     sender: res.sender,
                                     filter: res.filter,
                                     title_filter: res.title_filter,

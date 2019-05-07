@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 
     <div class="h-100">
         <v-flex class="mx-4">
@@ -11,6 +11,7 @@
                 <v-spacer></v-spacer>
                 <v-btn flat @click="addItem">Добавить правило</v-btn>
                 <v-btn v-if="changesMade" flat @click="updateTable">Сохранить изменения</v-btn>
+		<v-btn flat @click="updatePrices">{{updateText}}</v-btn>
                 <v-btn flat @click="quit">Выйти</v-btn>
             </v-flex>
             <v-data-table item-key="id" ref="tt" data-app :headers="headers" :items="send_rules">
@@ -137,7 +138,7 @@
                                 {{new Date(props.item.date).toLocaleString()}}
                             </td>
                             <td :class="props.item.success === 'success' || props.item.success === undefined ? 'green lighten-5' : props.item.success === 'pending' ? 'yellow lighten-5' : 'red lighten-5'">
-                                {{props.item.convert_rule === undefined ? JSON.parse(props.item.info) === null ? props.item.info : JSON.parse(props.item.info).response : 'Прайс обновлен'}}
+                                {{props.item.convert_rule === undefined ? props.item.info === null ? props.item.info : props.item.info : 'Прайс обновлен'}}
                             </td>
                         </template>
                     </v-data-table>
@@ -159,11 +160,13 @@
         name: "rules",
         data() {
             return {
+		updateText: "Обновить прайсы",
                 defaultItem: {
                     rule_name: 'имя',
                     sender: 1,
                     subscribe_to_update: false,
                     result_name: '',
+		    result_name: 'price',
                     in_use: true,
                     intervals: [],
                     frequency: {days: 0, hours: 0, minutes: 0},
@@ -341,8 +344,14 @@
             sendNow(item){
                 item.send_now = true;
                 this.updateTable();
-            }
+            },
+	    updatePrices(){
+	        this.$store.dispatch('UPDATE_PRICES')
+		this.updateText = 'Идет обновление';
+		setTimeout(() => this.updateText = 'Обновить прайсы', 1000*60*10);
+	    }
         },
+        
         sockets: {
             async loadTableAnswer(answer) {
 

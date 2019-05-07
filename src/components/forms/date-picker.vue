@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <v-menu v-model="menu" :close-on-content-click="false" attach offset-x>
             <v-btn @click="openTab" flat small slot="activator">{{intervalStr}}</v-btn>
@@ -52,7 +52,7 @@
                 </div>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn @click="one = !one"  flat>{{one ? "По таймеру" : "По расписанию"}}</v-btn>
+                    <v-btn @click="nextTab"  flat>{{one ? "По таймеру" : "По расписанию"}}</v-btn>
                     <v-btn  flat @click="save">Сохранить</v-btn>
                 </v-card-actions>
             </v-card>
@@ -65,6 +65,16 @@
     export default {
         props: ["index", "intervals", "frequency", "intervalStr"],
         methods: {
+		nextTab(){
+if (this.one) {
+this.intervalsLoc = [];
+} else {
+this.frequencyLoc = {days: "",
+hours: "",
+minutes: ""};
+}
+this.one = !this.one;
+},
             deleteItem(item) {
                 const index = this.intervalsLoc.indexOf(item);
                 this.intervalsLoc.splice(index, 1)
@@ -90,6 +100,8 @@
                 this.$set(this.intervalsLoc, item.index, date);
             },
             save(){
+console.log(this.intervalsLoc);
+console.log(this.frequencyLoc);
                 this.$emit('saveTime', {intervals: this.intervalsLoc, frequency: this.frequencyLoc});
                 this.menu = false;
             }

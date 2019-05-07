@@ -78,6 +78,19 @@ const actions = {
                 })
         })
     },
+    UPDATE_PRICES: ({}, data) => {
+        return new Promise((resolve, reject) => {
+            this.default.state.axios({
+                url: 'http://' + this.default.state.ip + ':3535/updatePrices', method: 'GET'
+            })
+                .then(resp => {
+                    resolve(resp)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
+    },
     SESSION_CHECK: ({commit}) => {
         return new Promise(resolve => {
             if (this.default.state.token && this.default.state.username) {

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <v-dialog v-model="dialog" scrollable>
             <v-btn slot="activator" @click="refreshHeaders" flat icon color="grey">
@@ -111,6 +111,9 @@
                                     в
                                     результирующий файл будут включены только те строки, которые включают строку, или
                                     исключают.
+                                </div>
+                                <div class="body-2"><br><kbd>НЕРАВНО(СТРОКА)</kbd> -
+                                    исключает из результата все что не равно строке.
                                 </div>
                                 <div class="body-2"><br><kbd>ИСКЛЮЧАЕТСИНДЕКСОМ(А;0)</kbd> или <kbd>ВКЛЮЧАЕТСИНДЕКСОМ(А;0)</kbd>
                                     - в результирующий файл будут включены только те строки, в которых символ под
