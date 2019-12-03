@@ -74,6 +74,18 @@
                         </v-edit-dialog>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
+                        <v-edit-dialog :return-value.sync="props.item.text" large lazy>
+                            {{ props.item.text }}
+                            <v-text-field
+                                slot="input"
+                                @change="changesMade = true"
+                                v-model="props.item.text"
+                                single-line
+                                autofocus
+                            ></v-text-field>
+                        </v-edit-dialog>
+                    </td>
+                    <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
                         <v-layout row justify-space-between align-center>
                             <div>
                                 {{getTemplateStr(props.item.templatesComp)}}
@@ -84,10 +96,10 @@
                         </v-layout>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
-                        <v-layout row justify-space-between align-center>
+                        <v-layout row justify-center style="overflow: hidden; max-height: 100px !important; text-overflow: ellipsis;">
                             {{getReceiverStr(props.item.receiversComp)}}
                             <v-spacer></v-spacer>
-                            <receivers :defaultSelect="props.item.receiversComp" @selectReceivers="selectReceivers($event, props.item)"></receivers>
+                            <receivers class="my-auto" :defaultSelect="props.item.receiversComp" @selectReceivers="selectReceivers($event, props.item)"></receivers>
                         </v-layout>
                     </td>
                     <td class="text-md-center" :class="props.item.removed ? 'grey' : ''">
@@ -172,6 +184,7 @@
                     frequency: {days: 0, hours: 0, minutes: 0},
                     sender_name: '',
                     title: '',
+                    text: '',
                     region: '',
                     groups: '',
                     xls: false,
@@ -195,6 +208,7 @@
                     {text: 'Почта отправитель', align: 'center', value: 'sender'},
                     {text: 'Имя файла', align: 'center', value: 'resultName'},
                     {text: 'Тема письма', align: 'center', value: 'title'},
+                    {text: 'Текст письма', align: 'center', value: 'text'},
                     {text: 'Шаблоны', align: 'center', value: 'templates'},
                     {text: 'Получатели', align: 'center', value: 'receivers'},
                     {text: 'Отслеживать', align: 'center', value: 'subscribeToUpdate'},
@@ -385,6 +399,7 @@
                         frequency: tab.frequency === null ? {days: 0, hours: 0, minutes: 0} : tab.frequency,
                         sender_name: sendersComp.filter(send => send.id === tab.sender)[0].name,
                         title: tab.title,
+                        text: tab.text,
                         region: tab.region,
                         groups: tab.groups,
                         xls: tab.xls,
